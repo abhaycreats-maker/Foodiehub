@@ -1,123 +1,79 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FoodieHub Premium</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"><script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script><script src="https://checkout.razorpay.com/v1/checkout.js"></script><style>
-body{margin:0;font-family:Poppins;background:#0f172a;color:#fff}
-header{padding:15px 20px;display:flex;justify-content:space-between;background:#020617}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;padding:20px}
-.card{background:#1e293b;border-radius:15px;overflow:hidden;transition:.3s}
-.card:hover{transform:scale(1.05)}
-.card img{width:100%;height:140px;object-fit:cover}
-.card-content{padding:10px}
-button{background:#facc15;border:none;padding:8px 12px;border-radius:8px;font-weight:600}
-.cart{padding:20px}
-.form{max-width:350px;margin:20px auto;background:#1e293b;padding:15px;border-radius:10px}
-input{width:100%;padding:8px;margin:5px 0;border:none;border-radius:6px}
-</style></head>
-<body><header>
-<h2>FoodieHub 🚀</h2>
-<button onclick="logout()">Logout</button>
-</header><div class="form" id="auth">
-<h3>Login / Signup</h3>
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-<button onclick="signup()">Sign Up</button>
-<button onclick="login()">Login</button>
-</div><div class="products" id="products"></div><div class="cart">
-<h3>Cart</h3>
-<div id="cartItems"></div>
-<p id="total"></p>
-<button onclick="payNow()">Pay & Order</button>
-</div><div class="form">
-<input id="name" placeholder="Name">
-<input id="phone" placeholder="Phone">
-<input id="address" placeholder="Address">
-</div><script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDtNa8dNTb1BxATNxSwXMVQRyoB5fZjuJU",
-  authDomain: "foodiehub-cd62f.firebaseapp.com",
-  projectId: "foodiehub-cd62f"
-};
+<title>FoodieHub</title>
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+<link rel="stylesheet" href="style.css">
 
-let cart=[];
+<!-- AOS -->
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"/>
 
-function signup(){
-  auth.createUserWithEmailAndPassword(email.value,password.value)
-  .then(()=>alert('Signup success'))
-  .catch(e=>alert(e.message));
-}
+</head>
+<body>
 
-function login(){
-  auth.signInWithEmailAndPassword(email.value,password.value)
-  .then(()=>{alert('Login success');document.getElementById('auth').style.display='none';})
-  .catch(e=>alert(e.message));
-}
+<header>
+  <h1>🍽️ FoodieHub</h1>
+  <button onclick="showLogin()">Login</button>
+</header>
 
-function logout(){auth.signOut();location.reload();}
+<section class="hero">
+  <h2>Delicious Food, Delivered Fast</h2>
+  <p>Order your favorite meals now</p>
+</section>
 
-function loadProducts(){
-  db.collection('products').get().then(snapshot=>{
-    let html='';
-    snapshot.forEach(doc=>{
-      let p=doc.data();
-      html+=`<div class='card'>
-      <img src='${p.img}'>
-      <div class='card-content'>
-      <h4>${p.name}</h4>
-      <p>₹${p.price}</p>
-      <button onclick="addToCart('${p.name}',${p.price})">Add</button>
-      </div></div>`;
-    });
-    products.innerHTML=html;
-  });
-}
+<section class="products">
+  <h2>Our Menu</h2>
 
-function addToCart(n,p){cart.push({n,p});updateCart();}
+  <div class="card" data-aos="zoom-in">
+    <img src="https://source.unsplash.com/300x200/?pizza">
+    <h3>Pizza</h3>
+    <p>₹299</p>
+    <button onclick="orderItem('Pizza',299)">Order</button>
+  </div>
 
-function updateCart(){
-  let html='',t=0;
-  cart.forEach(i=>{html+=`<p>${i.n} ₹${i.p}</p>`;t+=i.p});
-  cartItems.innerHTML=html;
-  total.innerText='Total ₹'+t;
-}
+  <div class="card" data-aos="zoom-in">
+    <img src="https://source.unsplash.com/300x200/?burger">
+    <h3>Burger</h3>
+    <p>₹149</p>
+    <button onclick="orderItem('Burger',149)">Order</button>
+  </div>
 
-function getTotal(){let t=0;cart.forEach(i=>t+=i.p);return t;}
+  <div class="card" data-aos="zoom-in">
+    <img src="https://source.unsplash.com/300x200/?pasta">
+    <h3>Pasta</h3>
+    <p>₹199</p>
+    <button onclick="orderItem('Pasta',199)">Order</button>
+  </div>
 
-function payNow(){
-  let totalAmount=getTotal();
-  if(totalAmount===0){alert('Cart empty');return;}
+</section>
 
-  var options = {
-    key: "rzp_test_123456",
-    amount: totalAmount * 100,
-    currency: "INR",
-    name: "FoodieHub",
-    handler: function (){placeOrder();}
-  };
+<section class="order-box" id="orderBox">
+  <h2>Place Order</h2>
+  <input type="text" id="name" placeholder="Your Name">
+  <input type="text" id="address" placeholder="Your Address">
+  <input type="text" id="item" readonly>
+  <button onclick="sendWhatsApp()">Confirm Order</button>
+</section>
 
-  var rzp = new Razorpay(options);
-  rzp.open();
-}
+<section class="login" id="loginBox">
+  <h2>Signup / Login</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="signup()">Signup</button>
+  <button onclick="login()">Login</button>
+</section>
 
-function placeOrder(){
-  let n=name.value,p=phone.value,a=address.value;
-  if(!n||!p||!a){alert('Fill all');return;}
+<section class="about">
+  <h2>About Us</h2>
+  <p>We serve best food with premium quality & fast delivery.</p>
+</section>
 
-  db.collection('orders').add({name:n,phone:p,address:a,cart});
+<!-- JS Libraries -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-  let msg='Order%0A';
-  cart.forEach(i=>msg+=`${i.n} ₹${i.p}%0A`);
-  msg+=`Name:${n}%0APhone:${p}%0AAddress:${a}`;
+<script src="script.js"></script>
 
-  window.open(`https://wa.me/919999888777?text=${msg}`);
-}
-
-loadProducts();
-</script></body>
+</body>
 </html>
