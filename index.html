@@ -55,7 +55,7 @@ function signup(){
 
 function login(){
   auth.signInWithEmailAndPassword(email.value,password.value)
-  .then(()=>{alert('Login success');authBox.style.display='none';})
+  .then(()=>{alert('Login success');document.getElementById('auth').style.display='none';})
   .catch(e=>alert(e.message));
 }
 
