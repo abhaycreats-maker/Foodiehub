@@ -1,107 +1,168 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Premium Restaurant</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+<title>FoodieHub Final</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"><!-- Firebase --><script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script><!-- Razorpay --><script src="https://checkout.razorpay.com/v1/checkout.js"></script><style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins'}
 body{background:#0f172a;color:#fff}
-header{padding:20px 50px;display:flex;justify-content:space-between;align-items:center;background:#020617}
-header h1{color:#facc15}
-nav a{margin-left:20px;color:#fff;text-decoration:none}
-.hero{height:60vh;display:flex;justify-content:center;align-items:center;text-align:center;background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092') center/cover}
-.hero h2{font-size:40px}
-.container{padding:40px 50px}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
-.card{background:#1e293b;border-radius:20px;overflow:hidden;transition:.3s}
-.card:hover{transform:translateY(-10px)}
-.card img{width:100%;height:180px;object-fit:cover}
-.card-content{padding:15px}
-.price{color:#facc15;margin:10px 0}
-button{background:#facc15;border:none;padding:10px 15px;border-radius:10px;cursor:pointer;font-weight:600}
-.auth{max-width:400px;margin:auto;background:#1e293b;padding:20px;border-radius:15px}
-.auth input{width:100%;margin:10px 0;padding:10px;border:none;border-radius:10px}
-.about{margin-top:40px;background:#020617;padding:30px;border-radius:20px}
-footer{text-align:center;padding:20px;margin-top:30px;background:#020617}
-</style>
-</head>
-<body>
-<header>
-<h1>FoodieHub</h1>
-<nav>
-<a href="#menu">Menu</a>
-<a href="#signup">Sign Up</a>
-<a href="#about">About</a>
-</nav>
-</header>
-
-<section class="hero">
-<h2>Delicious Food Delivered Fast</h2>
-</section>
-
-<div class="container" id="menu">
-<h2>Our Menu</h2>
-<div class="products">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38">
-<div class="card-content">
-<h3>Pizza</h3>
-<p class="price">₹299</p>
-<button onclick="order('Pizza')">Order Now</button>
-</div>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1550547660-d9450f859349">
-<div class="card-content">
-<h3>Burger</h3>
-<p class="price">₹149</p>
-<button onclick="order('Burger')">Order Now</button>
-</div>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d">
-<div class="card-content">
-<h3>Pasta</h3>
-<p class="price">₹199</p>
-<button onclick="order('Pasta')">Order Now</button>
-</div>
-</div>
-</div>
-</div>
-
-<div class="container" id="signup">
-<h2>Customer Sign Up</h2>
-<div class="auth">
-<input type="text" placeholder="Name">
-<input type="email" placeholder="Email">
-<input type="password" placeholder="Password">
+header{padding:15px 30px;display:flex;justify-content:space-between;background:#020617}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;padding:20px}
+.card{background:#1e293b;border-radius:10px;overflow:hidden}
+.card img{width:100%;height:140px;object-fit:cover}
+.card-content{padding:10px}
+.add{background:#22c55e;color:#fff;border:none;padding:6px 10px;border-radius:6px}
+.cart{position:fixed;right:10px;top:80px;background:#1e293b;padding:10px;border-radius:10px;width:230px}
+.form{max-width:350px;margin:20px auto;background:#1e293b;padding:15px;border-radius:10px}
+input{width:100%;padding:8px;margin:5px 0;border:none;border-radius:6px}
+.admin{max-width:400px;margin:20px auto;background:#020617;padding:15px;border-radius:10px}
+</style></head>
+<body><header>
+<h2>FoodieHub 🚀</h2>
+<button onclick="logout()">Logout</button>
+</header><div class="form" id="auth">
+<h3>Login / Signup</h3>
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
 <button onclick="signup()">Sign Up</button>
-</div>
-</div>
+<button onclick="login()">Login</button>
+</div><div class="products" id="products"></div><div class="cart">
+<h4>Cart</h4>
+<div id="cartItems"></div>
+<p id="total"></p>
+<button onclick="payNow()">Pay & Order</button>
+</div><div class="form">
+<input id="name" placeholder="Name">
+<input id="phone" placeholder="Phone">
+<input id="address" placeholder="Address">
+</div><div class="admin" id="adminPanel" style="display:none">
+<h3>Admin Panel</h3>
+<input id="pname" placeholder="Product Name">
+<input id="pprice" placeholder="Price">
+<input id="pimg" placeholder="Image URL">
+<button onclick="addProduct()">Add Product</button>
+<h4>Orders</h4>
+<div id="ordersList"></div>
+</div><script>
+// 🔥 PASTE YOUR FIREBASE CONFIG HERE
+const firebaseConfig = {
+  apiKey: "AIzaSyDtNa8dNTb1BxATNxSwXMVQRyoB5fZjuJU",
+  authDomain: "foodiehub-cd62f.firebaseapp.com",
+  projectId: "foodiehub-cd62f"
+};
 
-<div class="container" id="about">
-<div class="about">
-<h2>About Our Restaurant</h2>
-<p>We provide premium quality food with fast delivery. Our chefs use fresh ingredients to create mouth-watering dishes that customers love.</p>
-</div>
-</div>
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-<footer>
-<p>© 2026 FoodieHub. All Rights Reserved.</p>
-</footer>
+let cart=[];
 
-<script>
-function order(item){
-alert(item + " ordered successfully!");
-}
-
+// AUTH
 function signup(){
-alert("Account Created Successfully!");
+  auth.createUserWithEmailAndPassword(email.value,password.value)
+  .then(()=>alert('Signup success'))
+  .catch(e=>alert(e.message));
 }
-</script>
-</body>
+
+function login(){
+  auth.signInWithEmailAndPassword(email.value,password.value)
+  .then(res=>{
+    alert('Login success');
+    authBox.style.display='none';
+    if(res.user.email==='admin@gmail.com'){
+      adminPanel.style.display='block';
+      loadOrders();
+    }
+  })
+  .catch(e=>alert(e.message));
+}
+
+function logout(){auth.signOut();location.reload();}
+
+// PRODUCTS
+function loadProducts(){
+  db.collection('products').get().then(snapshot=>{
+    let html='';
+    snapshot.forEach(doc=>{
+      let p=doc.data();
+      html+=`<div class='card'>
+      <img src='${p.img}'>
+      <div class='card-content'>
+      <h4>${p.name}</h4>
+      <p>₹${p.price}</p>
+      <button class='add' onclick="addToCart('${p.name}',${p.price})">Add</button>
+      </div></div>`;
+    });
+    products.innerHTML=html;
+  });
+}
+
+function addToCart(n,p){cart.push({n,p});updateCart();}
+
+function updateCart(){
+  let html='',t=0;
+  cart.forEach(i=>{html+=`<p>${i.n} ₹${i.p}</p>`;t+=i.p});
+  cartItems.innerHTML=html;
+  total.innerText='Total ₹'+t;
+}
+
+function getTotal(){let t=0;cart.forEach(i=>t+=i.p);return t;}
+
+// PAYMENT
+function payNow(){
+  let totalAmount=getTotal();
+  if(totalAmount===0){alert('Cart empty');return;}
+
+  var options = {
+    key: "YOUR_RAZORPAY_KEY",
+    amount: totalAmount * 100,
+    currency: "INR",
+    name: "FoodieHub",
+    handler: function (){
+      placeOrder();
+    }
+  };
+
+  var rzp = new Razorpay(options);
+  rzp.open();
+}
+
+// ORDER
+function placeOrder(){
+  let n=name.value,p=phone.value,a=address.value;
+  if(!n||!p||!a){alert('Fill all');return;}
+
+  db.collection('orders').add({name:n,phone:p,address:a,cart});
+
+  let msg='Order%0A';
+  cart.forEach(i=>msg+=`${i.n} ₹${i.p}%0A`);
+  msg+=`Name:${n}%0APhone:${p}%0AAddress:${a}`;
+
+  window.open(`https://wa.me/919876543210?text=${msg}`);
+}
+
+// ADMIN
+function addProduct(){
+  db.collection('products').add({
+    name:pname.value,
+    price:Number(pprice.value),
+    img:pimg.value
+  }).then(()=>{alert('Added');loadProducts();});
+}
+
+function loadOrders(){
+  db.collection('orders').get().then(snapshot=>{
+    let html='';
+    snapshot.forEach(doc=>{
+      let o=doc.data();
+      html+=`<div style='margin:10px;padding:10px;background:#1e293b'>
+      <p><b>${o.name}</b> (${o.phone})</p>
+      <p>${o.address}</p></div>`;
+    });
+    ordersList.innerHTML=html;
+  });
+}
+
+loadProducts();
+</script></body>
 </html>
