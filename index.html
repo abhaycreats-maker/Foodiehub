@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Restaurant</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:#0f172a;color:#fff}
+header{padding:20px 50px;display:flex;justify-content:space-between;align-items:center;background:#020617}
+header h1{color:#facc15}
+nav a{margin-left:20px;color:#fff;text-decoration:none}
+.hero{height:60vh;display:flex;justify-content:center;align-items:center;text-align:center;background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092') center/cover}
+.hero h2{font-size:40px}
+.container{padding:40px 50px}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.card{background:#1e293b;border-radius:20px;overflow:hidden;transition:.3s}
+.card:hover{transform:translateY(-10px)}
+.card img{width:100%;height:180px;object-fit:cover}
+.card-content{padding:15px}
+.price{color:#facc15;margin:10px 0}
+button{background:#facc15;border:none;padding:10px 15px;border-radius:10px;cursor:pointer;font-weight:600}
+.auth{max-width:400px;margin:auto;background:#1e293b;padding:20px;border-radius:15px}
+.auth input{width:100%;margin:10px 0;padding:10px;border:none;border-radius:10px}
+.about{margin-top:40px;background:#020617;padding:30px;border-radius:20px}
+footer{text-align:center;padding:20px;margin-top:30px;background:#020617}
+</style>
+</head>
+<body>
+<header>
+<h1>FoodieHub</h1>
+<nav>
+<a href="#menu">Menu</a>
+<a href="#signup">Sign Up</a>
+<a href="#about">About</a>
+</nav>
+</header>
+
+<section class="hero">
+<h2>Delicious Food Delivered Fast</h2>
+</section>
+
+<div class="container" id="menu">
+<h2>Our Menu</h2>
+<div class="products">
+<div class="card">
+<img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38">
+<div class="card-content">
+<h3>Pizza</h3>
+<p class="price">₹299</p>
+<button onclick="order('Pizza')">Order Now</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1550547660-d9450f859349">
+<div class="card-content">
+<h3>Burger</h3>
+<p class="price">₹149</p>
+<button onclick="order('Burger')">Order Now</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d">
+<div class="card-content">
+<h3>Pasta</h3>
+<p class="price">₹199</p>
+<button onclick="order('Pasta')">Order Now</button>
+</div>
+</div>
+</div>
+</div>
+
+<div class="container" id="signup">
+<h2>Customer Sign Up</h2>
+<div class="auth">
+<input type="text" placeholder="Name">
+<input type="email" placeholder="Email">
+<input type="password" placeholder="Password">
+<button onclick="signup()">Sign Up</button>
+</div>
+</div>
+
+<div class="container" id="about">
+<div class="about">
+<h2>About Our Restaurant</h2>
+<p>We provide premium quality food with fast delivery. Our chefs use fresh ingredients to create mouth-watering dishes that customers love.</p>
+</div>
+</div>
+
+<footer>
+<p>© 2026 FoodieHub. All Rights Reserved.</p>
+</footer>
+
+<script>
+function order(item){
+alert(item + " ordered successfully!");
+}
+
+function signup(){
+alert("Account Created Successfully!");
+}
+</script>
+</body>
+</html>
